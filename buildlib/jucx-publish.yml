@@ -46,21 +46,21 @@ jobs:
           secureFile: sparkucx-public.gpg
         name: publicKey
 
-      - bash: |
-          mkdir ${{ parameters.gpg_dir }}
-          export GPG_TTY=`tty`
-          chmod 700 ${{ parameters.gpg_dir }}
-          cp $(publicKey.secureFilePath)  ${{ parameters.gpg_dir }}/pubring.gpg
-          cp $(privateKey.secureFilePath) ${{ parameters.gpg_dir }}/secring.gpg
-          export GNUPGHOME=${{ parameters.gpg_dir }}
-          TAG=`git describe --tags`
-          # Maven requires version to be of form MAJOR_VERSION.MINOR_VERSIOn,...
-          # ucx tags are of form v1.x.x - need to remove 'v' from the beginning of string
-          MAVEN_VERSION=${TAG:1}
-          make -C bindings/java/src/main/native/ ${{ parameters.target }} \
-              ARGS="--settings ${{ parameters.temp_cfg }}" JUCX_VERSION=${MAVEN_VERSION}
-        displayName: Publish JUCX jar to maven central
-        env:
-          GPG_PASSPHRASE: $(GPG_PASSPHRASE)
-          SONATYPE_PASSWORD: $(SONATYPE_PASSWORD)
-          SONATYPE_USERNAME: $(SONATYPE_USERNAME)
+      # - bash: |
+      #     mkdir ${{ parameters.gpg_dir }}
+      #     export GPG_TTY=`tty`
+      #     chmod 700 ${{ parameters.gpg_dir }}
+      #     cp $(publicKey.secureFilePath)  ${{ parameters.gpg_dir }}/pubring.gpg
+      #     cp $(privateKey.secureFilePath) ${{ parameters.gpg_dir }}/secring.gpg
+      #     export GNUPGHOME=${{ parameters.gpg_dir }}
+      #     TAG=`git describe --tags`
+      #     # Maven requires version to be of form MAJOR_VERSION.MINOR_VERSIOn,...
+      #     # ucx tags are of form v1.x.x - need to remove 'v' from the beginning of string
+      #     MAVEN_VERSION=${TAG:1}
+      #     make -C bindings/java/src/main/native/ ${{ parameters.target }} \
+      #         ARGS="--settings ${{ parameters.temp_cfg }}" JUCX_VERSION=${MAVEN_VERSION}
+      #   displayName: Publish JUCX jar to maven central
+      #   env:
+      #     GPG_PASSPHRASE: $(GPG_PASSPHRASE)
+      #     SONATYPE_PASSWORD: $(SONATYPE_PASSWORD)
+      #     SONATYPE_USERNAME: $(SONATYPE_USERNAME)
